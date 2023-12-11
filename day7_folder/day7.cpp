@@ -22,9 +22,26 @@ class hsmap{
 		}
 };
 
-void solve()
+int classify(string A)
 {
-	
+
+}
+
+
+bool condition(std::pair<std::string, int> A,std::pair<std::string, int> B)
+{
+	symbols = []
+	int a = classify(A.first), b = classify(B.first);
+	if(a == b)
+	{
+		for(int i 
+	}
+	return a > b;
+}
+
+void solve(std::vector<std::pair<std::string, int> > games)
+{
+	sort(games.begin(),games.end(),condition);
 }
 
 int main()
