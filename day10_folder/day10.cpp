@@ -28,7 +28,7 @@ int solve(std::vector<std::string> pipesLayout)
 		BendSW = '6',
 		BendSE = 'F',
 	};
-	
+
 	std::unordered_map<Pipe, std::pair<int, int>> pipeTranslations = {
 		{Pipe::Vertical, {0, 0}},
 		{Pipe::Horizontal, {-1, 1}},
@@ -43,10 +43,19 @@ int solve(std::vector<std::string> pipesLayout)
 	while(positionRight.first != positionLeft.first and positionRight.second != positionLeft.second)
 	{
 		// Moving part is the most tricky
+        // First direction
+        case(positionRight)
+        {
 
+        }
+        // Second direction
+        case()
+        {
+
+        }
 		counter++;
 	}
-	return counter; 
+	return counter;
 }
 
 int main()
