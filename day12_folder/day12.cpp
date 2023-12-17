@@ -4,18 +4,47 @@
 #include <sstream>
 #include <iomanip>
 
-long long solve(std::string springs,std::vector<int> brokenInfo,int brokenSum,int currentSpring = 0,int currentInfo = 0)
+long long solve(std::string springs,std::vector<int> brokenInfo,int brokenSum,int currentSpring = 0,int currentInfo = 0,bool insideOfPlacement = false)
 {
     int answer = 0;
     if(brokenSum == 0)
     {
         return 1;
     }
-    for(int i = 0;i < brokenInfo.size();i++)
+    for(int i = currentSpring;i < brokenInfo.size();i++)
     {
-
+        if(springs[i] == '#')
+        {
+            insideOfPlacement = true;
+            if(brokenInfo[currentInfo] == 0)
+                currentInfo++;
+            brokenInfo[currentInfo]--;
+            brokenSum--;
+        }
+        else if(springs[i] == '.' && insideOfPlacement)
+        {
+            currentInfo++;
+            insideOfPlacement = false;
+        }
+        else if(springs[i] == '?')
+        {
+            insideOfPlacement = true;
+            if(brokenInfo[currentInfo] == 0)
+                currentInfo++;
+            // Here we place .
+            answer += solve(springs,brokenInfo,brokenSum,i+1,currentInfo,insideOfPlacement);
+            // Here we place #
+            brokenInfo[currentInfo]--;
+            if(brokenInfo[currentInfo] == 0)
+                currentInfo++;
+            answer += solve(springs,brokenInfo,brokenSum-1,i+1,currentInfo,1+insideOfPlacement);
+        }
     }
-    return answer = 0;
+    if(brokenSum == 0)
+    {
+        answer++;
+    }
+    return answer;
 }
 
 int main()
@@ -25,10 +54,9 @@ int main()
     std::string line,springs,broken,number;
     std::ifstream in("infile12.txt");
     std::vector<int> brokenInfo;
-    while(getline(in,line))
+    while(in >> springs >> broken)
     {
-        std::stringstream spaceSeparator(line);
-        spaceSeparator >> springs >> broken;
+        std::cout << springs << broken << "\n";
         std::stringstream commaSeparator(broken);
         while(getline(commaSeparator,number,','))
         {
