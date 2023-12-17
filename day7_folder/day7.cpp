@@ -83,8 +83,10 @@ int classifyPokerHand(const std::string& hand) {
 int classify(std::string hand) {
 	std::unordered_map<char, int> cardCount;
 	int max_hand = 0;
+	int joker = 0;
 	char symbols[13] = {'A', 'K', 'Q', 'J', 'T', '9', '8', '7', '6', '5', '4', '3', '2'};
 	for (char card : hand) {
+	    if(card!='J')
 	    if (cardCount.find(card) == cardCount.end()) {
 	        cardCount[card] = 1;
 	    } else {
@@ -92,28 +94,27 @@ int classify(std::string hand) {
 	    }
 	    if(card == 'J')
 	    {
-	    	
+	    	joker++;
 	    }
 	}
-	
+
 	int distinctCards = cardCount.size();
 	int maxSameCards = 0;
-	
+
 	for (const auto& pair : cardCount) {
 	    maxSameCards = std::max(maxSameCards, pair.second);
 	}
-	
-	if (maxSameCards == 5) {
+	if (maxSameCards + joker == 5) {
 	    return static_cast<int>(PokerHand::FiveOfAKind);
-	} else if (maxSameCards == 4) {
+	} else if (maxSameCards + joker == 4) {
 	    return static_cast<int>(PokerHand::FourOfAKind);
-	} else if (maxSameCards == 3 && distinctCards == 2) {
+	} else if (maxSameCards + joker == 3 && distinctCards == 2) {
 	    return static_cast<int>(PokerHand::FullHouse);
-	} else if (maxSameCards == 3) {
+	} else if (maxSameCards + joker == 3) {
 	    return static_cast<int>(PokerHand::ThreeOfAKind);
-	} else if (maxSameCards == 2 && distinctCards == 3) {
+	} else if (maxSameCards + joker == 2 && distinctCards == 3) {
 	    return static_cast<int>(PokerHand::TwoPair);
-	} else if (maxSameCards == 2) {
+	} else if (maxSameCards + joker == 2) {
 	    return static_cast<int>(PokerHand::OnePair);
 	} else {
 	    return static_cast<int>(PokerHand::HighCard);
@@ -122,18 +123,18 @@ int classify(std::string hand) {
 
 bool condition(std::pair<std::string, int> A,std::pair<std::string, int> B)
 {
-	char symbols[14] = {'A', 'K', 'Q', 'J', 'T', '9', '8', '7', '6', '5', '4', '3', '2','J'};
-	int a = classifyPokerHand(A.first), b = classifyPokerHand(B.first);
+	char symbols[14] = {'A', 'K', 'Q', 'T', '9', '8', '7', '6', '5', '4', '3', '2','J'};
+	int a = classify(A.first), b = classify(B.first);
 	    if (a == b) {
 			for (int i = 0; i < 5; ++i) {
 			char cardA = A.first[i], cardB = B.first[i];
 			int idxA = -1, idxB = -1;
-			
+
 			for (int j = 0; j < 14; ++j) {
 			    if (symbols[j] == cardA) idxA = j;
 			    if (symbols[j] == cardB) idxB = j;
 			}
-			
+            //std::cout << A.first << " " << B.first << " " << a << " " << idxA << " " << idxB << "\n";
 			if (idxA != idxB) return idxA > idxB;
 	}
 		    }
@@ -146,7 +147,7 @@ long long solve(std::vector<std::pair<std::string, int> > games)
 	long long answer = 0;
 	for(int i = 0;i < games.size();i++)
 	{
-		std::cout << games[i].first << " " << games[i].second << " * " << i + 1 << "\n";
+		//std::cout << games[i].first << " " << games[i].second << " * " << i + 1 << "\n";
 		answer += games[i].second * ( i + 1 );
 	}
 	return answer;
