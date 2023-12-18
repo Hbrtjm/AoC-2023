@@ -7,43 +7,72 @@
 long long solve(std::string springs,std::vector<int> brokenInfo,int brokenSum,int currentSpring = 0,int currentInfo = 0,bool insideOfPlacement = false)
 {
     int answer = 0;
+    if(brokenInfo[currentInfo] < 0 || currentSpring > springs.length() || currentInfo >= brokenInfo.size())
+    {
+        return 0;
+    }
+    if(currentSpring > 1000 + springs.length())
+    for(int i = 0;i < brokenInfo.size();i++)
+    {
+        if(brokenInfo[i] != 0)
+            return 0;
+    }
     if(brokenSum == 0)
     {
+
         return 1;
     }
-    for(int i = currentSpring;i < brokenInfo.size();i++)
+    while(springs[currentSpring]!='?' && currentSpring < springs.length())
     {
-        if(springs[i] == '#')
+        if(springs[currentSpring] == '#')
         {
             insideOfPlacement = true;
-            if(brokenInfo[currentInfo] == 0)
-                currentInfo++;
             brokenInfo[currentInfo]--;
             brokenSum--;
         }
-        else if(springs[i] == '.' && insideOfPlacement)
+        else if(springs[currentSpring] == '.' && insideOfPlacement)
         {
             currentInfo++;
             insideOfPlacement = false;
         }
-        else if(springs[i] == '?')
+        currentSpring++;
+    }
+    bool moved = false;
+    if (springs[currentSpring] == '?' && brokenInfo[currentInfo] >= 0)
+    {
+        if(insideOfPlacement)
+        {
+            currentInfo++;
+            insideOfPlacement = false;
+            moved = true;
+        }
+        springs[currentSpring] = '.';
+        // Here we place .
+        answer += solve(springs,brokenInfo,brokenSum,currentSpring+1,currentInfo,insideOfPlacement);
+        // Here we place #
+        if(moved)
+        {
+            currentInfo--;
+        }
+        if(brokenInfo[currentInfo] > 0)
         {
             insideOfPlacement = true;
-            if(brokenInfo[currentInfo] == 0)
-                currentInfo++;
-            // Here we place .
-            answer += solve(springs,brokenInfo,brokenSum,i+1,currentInfo,insideOfPlacement);
-            // Here we place #
+            springs[currentSpring] = '#';
             brokenInfo[currentInfo]--;
-            if(brokenInfo[currentInfo] == 0)
-                currentInfo++;
-            answer += solve(springs,brokenInfo,brokenSum-1,i+1,currentInfo,1+insideOfPlacement);
+            answer += solve(springs,brokenInfo,brokenSum-1,currentSpring+1,currentInfo,insideOfPlacement);
         }
+        springs[currentSpring] = '?';
+    }
+    if(brokenInfo[currentInfo] < 0 || currentSpring > springs.length() || currentInfo > brokenInfo.size())
+    {
+
+        return answer;
     }
     if(brokenSum == 0)
     {
         answer++;
     }
+
     return answer;
 }
 
@@ -56,6 +85,8 @@ int main()
     std::vector<int> brokenInfo;
     while(in >> springs >> broken)
     {
+        brokenSum = 0;
+        brokenInfo.clear();
         std::cout << springs << broken << "\n";
         std::stringstream commaSeparator(broken);
         while(getline(commaSeparator,number,','))
@@ -64,8 +95,9 @@ int main()
             brokenInfo.push_back(std::stoi(number));
         }
         answer += solve(springs,brokenInfo,brokenSum);
-        brokenInfo.clear();
     }
     std::cout << answer;
     return 0;
 }
+
+
