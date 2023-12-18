@@ -1,0 +1,4 @@
+# Compiled windows files
+*.exe
+*.o
+*.out
