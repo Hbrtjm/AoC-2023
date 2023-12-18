@@ -15,8 +15,12 @@ int solveMap(std::vector<std::string> volcanicMap)
         if(volcanicMap[0]==volcanicMap[i] && i != 0)
         {
             symmetry=true;
+            if(i%2!=1)
+            {
+                symmetry=false;
+            }
             // Check until it breaks, if not, we have a pattern
-            for(int j=i;j >= i/2;j--)
+            for(int j=i;j >= (i+1)/2;j--)
             {
                 if(volcanicMap[i-j] != volcanicMap[j])
                     symmetry=false;
@@ -30,15 +34,19 @@ int solveMap(std::vector<std::string> volcanicMap)
         if(volcanicMap[volcanicMap.size()-1]==volcanicMap[i] && i != volcanicMap.size()-1)
         {
             symmetry=true;
+            if((volcanicMap.size()-1-i)%2!=1)
+            {
+                symmetry=false;
+            }
             // Check until it breaks, if not, we have a pattern
-            for(int j=0;j < i/2;j++)
+            for(int j=0;j <= (volcanicMap.size()-i)/2;j++)
             {
                 if(volcanicMap[i+j] != volcanicMap[volcanicMap.size()-j-1])
                     symmetry=false;
             }
             if(symmetry)
             {
-                symmetriesVertical = (volcanicMap.size()-1)/2+i;
+                symmetriesVertical = (volcanicMap.size()-i)/2+i;
                 break;
             }
         }
@@ -59,12 +67,17 @@ int solveMap(std::vector<std::string> volcanicMap)
     }
     for(int i = 0;i < verticalMirror.size();i++)
     {
-        //std::cout << verticalMirror[0] << " " << verticalMirror[i] << "\n";
+        //std::cout << i << " " << verticalMirror[0] << " " << verticalMirror[i] << "\n";
         if(verticalMirror[0]==verticalMirror[i] && i != 0)
         {
             symmetry=true;
-            for(int j = i;j >= i/2;j--)
+            if(i%2!=1)
             {
+                symmetry = false;
+            }
+            for(int j = i;j >= (i+1)/2;j--)
+            {
+            //std::cout << i << " " << verticalMirror[i-j] << " " << verticalMirror[j] << "\n";
                 if(verticalMirror[i-j] != verticalMirror[j])
                 {
                     symmetry=false;
@@ -72,7 +85,7 @@ int solveMap(std::vector<std::string> volcanicMap)
             }
             if(symmetry)
             {
-                symmetriesHorizontal = (i+1)/2+1;
+                symmetriesHorizontal = (i+1)/2;
                 break;
             }
         }
@@ -80,15 +93,22 @@ int solveMap(std::vector<std::string> volcanicMap)
         if(verticalMirror[verticalMirror.size()-1]==verticalMirror[i] && i != verticalMirror.size()-1)
         {
             symmetry=true;
-            for(int j = 0;j <= i/2;j++)
+            if((verticalMirror.size()-i-1)%2!=1)
+            {
+                symmetry = false;
+            }
+            for(int j = 0;j < (verticalMirror.size()-i)/2;j++)
             {
                 if(verticalMirror[i+j] != verticalMirror[verticalMirror.size()-j-1])
                 {
                     symmetry=false;
                 }
             }
+            if(symmetry)
+            {
             symmetriesHorizontal = (verticalMirror.size()-i)/2+i;
             break;
+            }
         }
     }
     std::cout << symmetriesHorizontal << " " << symmetriesVertical << "\n";

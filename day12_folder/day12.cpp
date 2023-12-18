@@ -19,7 +19,6 @@ long long solve(std::string springs,std::vector<int> brokenInfo,int brokenSum,in
     }
     if(brokenSum == 0)
     {
-
         return 1;
     }
     while(springs[currentSpring]!='?' && currentSpring < springs.length())
