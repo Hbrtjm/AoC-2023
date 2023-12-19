@@ -8,7 +8,7 @@ struct Beam
 {
     int x;
     int y;
-    pair<int,int> direction;
+    std::pair<int,int> direction;
 };
 
 bool valid(Beam beam, int n,int m)
@@ -27,34 +27,77 @@ Beam move_(Beam beam)
 
 long long solve(std::vector<std::string> mirrors)
 {
-    bool visited[mirrors.size()][mirrors[0].length()] = {{1}};
+    bool visited[mirrors.size()][mirrors[0].length()]; // = {{1}};
+    for(int i = 0;i < mirrors.size();i++)
+    {
+        for(int j = 0;j < mirrors[i].length();j++)
+        {
+            visited[i][j] = 1;
+        }
+    }
     long long answer = 1;
-    vector<Beam> beams;
+    std::vector<Beam> beams;
     Beam temp;
     temp.x = 0;
     temp.y = 0;
     temp.direction = std::make_pair(1,0);
     beams.push_back(temp);
     visited[0][0] = 0;
+    int i = 0;
     while(!beams.empty())
-    for(int i = 0;i < beams.size();i++)
     {
+        if(i >= beams.size())
+        {
+            i = 0;
+        }
+        answer+=visited[beams[i].x][beams[i].y];
+        visited[beams[i].x][beams[i].y] = 0;
+        std::cout << i << " " << beams[i].x << " " << beams[i].y << " " << beams[i].direction.first << " " << beams[i].direction.second << "\n";
         switch(mirrors[beams[i].x][beams[i].y])
         {
             case '.':
                 if(valid(beams[i],mirrors.size(),mirrors[0].size()))
                 {
                     beams[i] = move_(beams[i]);
-                    answer += visited[beams[i].x][beams[i].y];
                     visited[beams[i].x][beams[i].y] = 0;
                 }
                 else
                 {
-                    beams.erease(beams.begin() + i);
+                    beams.erase(beams.begin() + i);
                 }
                 break;
             case '-':
                 if(beams[i].direction.second == 0)
+                {
+                    if(valid(beams[i],mirrors.size(),mirrors[0].size()))
+                    {
+                        beams[i] = move_(beams[i]);
+                    }
+                    else
+                    {
+                        beams.erase(beams.begin() + i);
+                    }
+                }
+                else
+                {
+                    Beam temp;
+                    temp.x = beams[i].x;
+                    temp.y = beams[i].y;
+                    temp.direction = std::make_pair(-1,0);
+                    beams[i].direction = std::make_pair(1,0);                     
+                    if(valid(beams[i],mirrors.size(),mirrors[0].length()))
+                    {
+                        beams[i] = move_(beams[i]);
+                    }
+                    if(valid(beams[i+1],mirrors.size(),mirrors[0].length()))
+                    {
+                        beams[i+1] = move_(beams[i]);
+                    }
+                    i++;
+                }
+                break;
+            case '|':
+                if(beams[i].direction.first == 0)
                 {
                     if(valid(beams[i],mirrors.size(),mirrors[0].size()))
                     {
@@ -64,16 +107,88 @@ long long solve(std::vector<std::string> mirrors)
                     }
                     else
                     {
-                        beams.erease(beams.begin() + i);
+                        beams.erase(beams.begin() + i);
                     }
                 }
                 else
                 {
+                    Beam temp;
+                    temp.x = beams[i].x;
+                    temp.y = beams[i].y;
+                    temp.direction = std::make_pair(0,-1);
+                    beams[i].direction = std::make_pair(0,1);                     
+                    if(valid(beams[i],mirrors.size(),mirrors[0].length()))
+                    {
+                        beams[i] = move_(beams[i]);
+                    }
+                    if(valid(beams[i+1],mirrors.size(),mirrors[0].length()))
+                    {
+                        beams[i+1] = move_(beams[i]);
+                    }
+                    i++;
+                }
 
+                break;
+            case '\\':
+                if(beams[i].direction.second == 0)
+                {
+                    if(beams[i].direction.first == 1)
+                    {
+                        beams[i].direction = std::make_pair(0,-1);
+                    }
+                    else
+                    {
+                        beams[i].direction = std::make_pair(0,1);
+                    }
+                }
+                else
+                {
+                    if(beams[i].direction.second == 1)
+                    {
+                        beams[i].direction = std::make_pair(1,0);
+                    }
+                    else
+                    {
+                        beams[i].direction = std::make_pair(-1,0);
+                    }
+                }
+                if(valid(beams[i],mirrors.size(),mirrors[0].length()))
+                {
+                    beams[i] = move_(beams[i]);
+                }
+                break;
+            case '/':
+                if(beams[i].direction.second == 0)
+                {
+                    if(beams[i].direction.first == 1)
+                    {
+                        beams[i].direction = std::make_pair(0,1);
+                    }
+                    else
+                    {
+                        beams[i].direction = std::make_pair(0,-1);
+                    }
+                }
+                else
+                {
+                    if(beams[i].direction.second == 1)
+                    {
+                        beams[i].direction = std::make_pair(-1,0);
+                    }
+                    else
+                    {
+                        beams[i].direction = std::make_pair(1,0);
+                    }
+                }
+                if(valid(beams[i],mirrors.size(),mirrors[0].length()))
+                {
+                    beams[i] = move_(beams[i]);
                 }
                 break;
         }
+        i++;
     }
+    return answer;
 }
 
 int main()

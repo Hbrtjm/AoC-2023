@@ -5,7 +5,14 @@
 
 int solveDynamic(std::vector<std::string> cityMap)
 {
-    int dynamicTable[cityMap.size()][cityMap[0].size()] = {{INT_MAX}};
+    int dynamicTable[cityMap.size()][cityMap[0].size()]; // = {{INT_MAX}};
+    for(int i = 0;i < cityMap.size();i++)
+    {
+        for(int j = 0;j < cityMap[i].length();j++)
+        {
+            dynamicTable[i][j] = INT32_MAX; 
+        }
+    }
     for(int i = 0;i < cityMap.size();i++)
     {
         for(int j = 0;j < cityMap[i].length();j++)

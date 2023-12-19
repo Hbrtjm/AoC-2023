@@ -7,7 +7,14 @@
 long long solve(std::string springs,std::vector<int> brokenInfo,int brokenSum,int currentSpring = 0,int currentInfo = 0,bool insideOfPlacement = false)
 {
     int answer = 0;
-    if(brokenInfo[currentInfo] < 0 || currentSpring > springs.length() || currentInfo >= brokenInfo.size())
+    std::cout << currentSpring << " " << currentInfo << " " << insideOfPlacement << " ";
+    // Checking if recursively data makes sense
+
+    if(currentSpring >= springs.length() || currentInfo >= brokenInfo.size())
+    {
+        return 0;
+    }
+    if(brokenInfo[currentInfo] < 0)
     {
         return 0;
     }
@@ -17,16 +24,27 @@ long long solve(std::string springs,std::vector<int> brokenInfo,int brokenSum,in
         if(brokenInfo[i] != 0)
             return 0;
     }
+
+    // If everything works and sum is 0, means that we fould a possibility
+
     if(brokenSum == 0)
     {
         return 1;
     }
-    while(springs[currentSpring]!='?' && currentSpring < springs.length())
+    while(currentSpring < springs.length())
     {
+        if(springs[currentSpring]=='?')
+        {
+            break;
+        }
         if(springs[currentSpring] == '#')
         {
             insideOfPlacement = true;
             brokenInfo[currentInfo]--;
+            if(brokenInfo[currentInfo] < 0)
+            {
+                return 0;
+            }
             brokenSum--;
         }
         else if(springs[currentSpring] == '.' && insideOfPlacement)
@@ -36,6 +54,23 @@ long long solve(std::string springs,std::vector<int> brokenInfo,int brokenSum,in
         }
         currentSpring++;
     }
+
+    // After going through the list until the first '?', check if everything make sense
+
+    if(currentSpring >= springs.length() || currentInfo >= brokenInfo.size())
+    {
+        return 0;
+    }
+
+    // That shouldn't happen, but could be the case when test case is broken
+
+    if(brokenInfo[currentInfo] < 0)
+    {
+        return 0;
+    }
+
+    // Analyzing the possibilities
+
     bool moved = false;
     if (springs[currentSpring] == '?' && brokenInfo[currentInfo] >= 0)
     {
@@ -53,6 +88,7 @@ long long solve(std::string springs,std::vector<int> brokenInfo,int brokenSum,in
         {
             currentInfo--;
         }
+        std::cout << " Dot done \n ";
         if(brokenInfo[currentInfo] > 0)
         {
             insideOfPlacement = true;
@@ -61,17 +97,20 @@ long long solve(std::string springs,std::vector<int> brokenInfo,int brokenSum,in
             answer += solve(springs,brokenInfo,brokenSum-1,currentSpring+1,currentInfo,insideOfPlacement);
         }
         springs[currentSpring] = '?';
+        std::cout << " Hash Done \n";
     }
-    if(brokenInfo[currentInfo] < 0 || currentSpring > springs.length() || currentInfo > brokenInfo.size())
+    if(currentSpring >= springs.length() || currentInfo >= brokenInfo.size())
     {
-
-        return answer;
+        return 0;
+    }
+    if(brokenInfo[currentInfo] < 0)
+    {
+        return 0;
     }
     if(brokenSum == 0)
     {
         answer++;
     }
-
     return answer;
 }
 

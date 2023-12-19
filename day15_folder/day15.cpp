@@ -3,9 +3,19 @@
 #include <vector>
 #include <sstream>
 
-class HashMap()
+struct Node
 {
+    int hash_;
+    int value;
+    Node *next;
+};
 
+class HashMap
+{
+    HashMap()
+    {
+        std::vector<Node> Hsmap;
+    }
 };
 
 long long hashFunction(std::vector<std::string> sequence)

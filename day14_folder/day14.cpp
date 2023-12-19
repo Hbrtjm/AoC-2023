@@ -5,7 +5,11 @@
 long long solve(std::vector<std::string> rocks)
 {
     long long answer = 0;
-    int placement[rocks.size()] = {0};
+    int placement[rocks.size()]; // = {0};
+    for(int i = 0;i < rocks.size();i++)
+    {
+        placement[i] = 0;
+    }
     for(int i = 0;i < rocks.size();i++)
     {
         for(int j = 0;j < rocks[i].length();j++)
